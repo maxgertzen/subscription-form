@@ -7,4 +7,9 @@ export const STRINGS = {
     DATE_OF_BIRTH: "תאריך לידה",
     CHECKBOX: "מסכים לקבל דיוור",
   },
+  STEPS: {
+    FIRST: "פרטים אישיים",
+    SECOND: "בחירת סכום",
+    THIRD: "תשלום",
+  },
 };
