@@ -1,8 +1,12 @@
 import React from "react";
 
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-import FormInput from "../FormInput/FormInput";
+import FormTextInput from "../FormTextInput/FormTextInput";
 import styled from "styled-components";
+import FormDatePicker from "../FormDatePicker/FormDatePicker";
+
+import { STRINGS } from "../../language";
+import FormCheckbox from "../FormCheckbox/FormCheckbox";
 
 const StyledForm = styled.form`
   display: flex;
@@ -10,6 +14,8 @@ const StyledForm = styled.form`
   align-items: center;
   width: 100%;
   max-width: 500px;
+  box-sizing: border-box;
+  direction: rtl;
 `;
 
 interface FormValues {
@@ -28,15 +34,21 @@ const Form: React.FC = () => {
     console.log(data);
   };
 
+  const { FORM_LABELS } = STRINGS;
+
   return (
     <FormProvider {...methods}>
       <StyledForm onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormInput label='First Name' name='firstName' />
-        <FormInput label='Last Name' name='lastName' />
-        <FormInput label='Phone Number' name='phoneNumber' />
-        <FormInput label='Email' name='email' />
-        <FormInput label='Date of Birth' name='dateOfBirth' />
-        <FormInput label='Checkbox' name='checkbox' />
+        <FormTextInput label={FORM_LABELS.FIRST_NAME} name='firstName' />
+        <FormTextInput label={FORM_LABELS.LAST_NAME} name='lastName' />
+        <FormTextInput
+          label={FORM_LABELS.MOBILE_PHONE}
+          name='phoneNumber'
+          type='tel'
+        />
+        <FormTextInput label={FORM_LABELS.EMAIL} name='email' type='email' />
+        <FormDatePicker label={FORM_LABELS.DATE_OF_BIRTH} name='dateOfBirth' />
+        <FormCheckbox label={FORM_LABELS.CHECKBOX} name='checkbox' />
         <input type='submit' />
       </StyledForm>
     </FormProvider>
