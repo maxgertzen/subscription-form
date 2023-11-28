@@ -1,15 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { useFormContext } from "react-hook-form";
-import StyledInputWithCheckmark from "../StyledInputWithCheckmark/StyledInputWithCheckmark";
+import StyledInputWithCheckmark from "../../theme/styles/StyledInputWithCheckmark";
+import { SharedTypographyStyles } from "../../theme/styles/StyledTypography";
+import { StepOneValues } from "../../interfaces";
 
 interface StyledInputWithCheckmarkProps {
   label: string;
-  name: string;
+  name: keyof StepOneValues;
   type?: "text" | "tel" | "email";
 }
 
 const InputField = styled.input`
+  ${SharedTypographyStyles}
   width: 100%;
   padding: 10px 0;
   border: unset;
@@ -25,11 +28,13 @@ const InputField = styled.input`
 `;
 
 const Label = styled.label<{ isFocused: boolean }>`
+  ${SharedTypographyStyles}
   position: absolute;
   top: ${(props) => (props.isFocused ? "-20px" : "10px")};
   right: 5px;
   font-size: ${(props) => (props.isFocused ? "12px" : "16px")};
-  color: ${(props) => (props.isFocused ? "blue" : "#999")};
+  color: ${(props) =>
+    props.isFocused ? props.theme.color.grey : props.theme.color.black};
   transition: all 0.3s ease;
   pointer-events: none;
 `;
@@ -39,7 +44,7 @@ const FormTextInput: React.FC<StyledInputWithCheckmarkProps> = ({
   name,
   type = "text",
 }) => {
-  const { register, getFieldState } = useFormContext();
+  const { register, getFieldState } = useFormContext<StepOneValues>();
   const [isFocused, setIsFocused] = React.useState(false);
 
   const { onBlur, onChange, ...restRegister } = register(name);

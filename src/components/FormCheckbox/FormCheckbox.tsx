@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useFormContext } from "react-hook-form";
-import StyledInputWithCheckmark from "../StyledInputWithCheckmark/StyledInputWithCheckmark";
+import StyledInputWithCheckmark from "../../theme/styles/StyledInputWithCheckmark";
+import { StepOneValues } from "../../interfaces";
 
 interface FormCheckboxProps {
   label: string;
-  name: string;
 }
 
 const Checkbox = styled.input`
@@ -21,12 +21,12 @@ const CheckboxLabel = styled.label`
   gap: 10px;
 `;
 
-const FormCheckbox: React.FC<FormCheckboxProps> = ({ label, name }) => {
-  const { register, watch, setValue } = useFormContext();
-  const isChecked = watch(name);
+const FormCheckbox: React.FC<FormCheckboxProps> = ({ label }) => {
+  const { register, watch, setValue } = useFormContext<StepOneValues>();
+  const isChecked = watch("checkbox");
 
   const handleCheckmarkClick = () => {
-    setValue(name, !isChecked);
+    setValue("checkbox", !isChecked);
   };
 
   return (
@@ -34,7 +34,7 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({ label, name }) => {
       checkmarkStatus={isChecked ? "valid" : "neutral"}
       onCheckmarkClick={handleCheckmarkClick}>
       <CheckboxLabel>
-        <Checkbox type='checkbox' {...register(name)} />
+        <Checkbox type='checkbox' {...register("checkbox")} />
         {label}
       </CheckboxLabel>
     </StyledInputWithCheckmark>

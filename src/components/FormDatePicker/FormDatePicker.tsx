@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { useFormContext, Controller } from "react-hook-form";
-import StyledInputWithCheckmark from "../StyledInputWithCheckmark/StyledInputWithCheckmark";
+import StyledInputWithCheckmark from "../../theme/styles/StyledInputWithCheckmark";
 import { DatePicker } from "antd";
+import { StepOneValues } from "../../interfaces";
+import * as dayjs from "dayjs";
+import { SharedTypographyStyles } from "../../theme/styles/StyledTypography";
 
 interface StyledInputWithCheckmarkProps {
   label: string;
-  name: string;
 }
 
 const DatePickerWrapper = styled.div`
@@ -19,21 +21,20 @@ const DatePickerWrapper = styled.div`
 `;
 
 const Label = styled.label<{ isFocused: boolean }>`
+  ${SharedTypographyStyles}
   position: absolute;
   top: ${(props) => (props.isFocused ? "-20px" : "10px")};
   right: 5px;
   font-size: ${(props) => (props.isFocused ? "12px" : "16px")};
-  color: ${(props) => (props.isFocused ? "blue" : "#999")};
+  color: ${({ isFocused, theme }) =>
+    isFocused ? theme.color.grey : theme.color.black};
   transition: all 0.3s ease;
-  pointer-events: none;
   z-index: 1;
 `;
 
-const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({
-  label,
-  name,
-}) => {
-  const { control, getValues, getFieldState } = useFormContext();
+const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({ label }) => {
+  const { control, getValues, getFieldState, setValue } =
+    useFormContext<StepOneValues>();
   const [isFocused, setIsFocused] = React.useState(false);
 
   const handleFocus = () => {
@@ -41,7 +42,7 @@ const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({
   };
 
   const handleBlur = () => {
-    const value = getValues(name);
+    const value = getValues("dateOfBirth");
     if (!value) {
       setIsFocused(false);
     }
@@ -50,10 +51,11 @@ const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({
   return (
     <StyledInputWithCheckmark
       checkmarkStatus={
-        (getFieldState(name)?.invalid && getFieldState(name)?.isDirty) ||
+        (getFieldState("dateOfBirth")?.invalid &&
+          getFieldState("dateOfBirth")?.isDirty) ||
         isFocused
           ? "focused"
-          : !getFieldState(name)?.invalid
+          : !getFieldState("dateOfBirth")?.invalid
           ? "valid"
           : "neutral"
       }>
@@ -61,10 +63,11 @@ const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({
       <DatePickerWrapper>
         <Controller
           control={control}
-          name={name}
-          render={({ field }) => (
+          name='dateOfBirth'
+          render={({ field: { value, onChange, ...restField } }) => (
             <DatePicker
-              {...field}
+              {...restField}
+              value={value && dayjs(value)}
               allowClear={false}
               placeholder=' '
               format='DD/MM/YYYY'
@@ -81,7 +84,9 @@ const FormDatePicker: React.FC<StyledInputWithCheckmarkProps> = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               onChange={(date, dateString) => {
-                field.onChange(date);
+                onChange();
+                if (date !== null)
+                  setValue("dateOfBirth", dayjs(date).toDate());
                 if (dateString === "") {
                   setIsFocused(false);
                 }
