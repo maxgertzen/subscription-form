@@ -1,57 +1,53 @@
 import React from "react";
 
-import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-import FormTextInput from "../FormTextInput/FormTextInput";
+import { useStateMachine } from "little-state-machine";
+import * as actions from "../../store/actions";
+import StepOneForm from "./StepOneForm/StepOneForm";
+import StepTwoForm from "./StepTwoForm/StepTwoForm";
+import Stepper from "../Stepper/Stepper";
 import styled from "styled-components";
-import FormDatePicker from "../FormDatePicker/FormDatePicker";
 
-import { STRINGS } from "../../language";
-import FormCheckbox from "../FormCheckbox/FormCheckbox";
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+const WrapperContainer = styled.div`
+  position: relative;
   max-width: 500px;
-  box-sizing: border-box;
-  direction: rtl;
+  padding-bottom: 4.75rem;
 `;
-
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  dateOfBirth: Date;
-  checkbox: boolean;
-}
-
 const Form: React.FC = () => {
-  const methods = useForm<FormValues>();
+  const [currentStep, setCurrentStep] = React.useState<1 | 2>(1);
+  const { actions: stateActions, state } = useStateMachine({ ...actions });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const onSubmit = (step: number) => () => {
+    if (step === 1) {
+      setCurrentStep(2);
+      return;
+    }
+    // TODO: send data to server with { ...state.formData.formDataStepOne, ...state.formData.formDataStepTwo }
   };
 
-  const { FORM_LABELS } = STRINGS;
+  const handleBack = () => {
+    setCurrentStep(1);
+  };
 
   return (
-    <FormProvider {...methods}>
-      <StyledForm onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormTextInput label={FORM_LABELS.FIRST_NAME} name='firstName' />
-        <FormTextInput label={FORM_LABELS.LAST_NAME} name='lastName' />
-        <FormTextInput
-          label={FORM_LABELS.MOBILE_PHONE}
-          name='phoneNumber'
-          type='tel'
+    <WrapperContainer>
+      {currentStep === 1 && (
+        <StepOneForm
+          initialValues={state?.formData?.formDataStepOne}
+          handleUpdate={stateActions.updateForm}
+          handleSubmit={onSubmit(1)}
         />
-        <FormTextInput label={FORM_LABELS.EMAIL} name='email' type='email' />
-        <FormDatePicker label={FORM_LABELS.DATE_OF_BIRTH} name='dateOfBirth' />
-        <FormCheckbox label={FORM_LABELS.CHECKBOX} name='checkbox' />
-        <input type='submit' />
-      </StyledForm>
-    </FormProvider>
+      )}
+      {currentStep === 2 && (
+        <StepTwoForm
+          initialValues={state?.formData?.formDataStepTwo}
+          handleUpdate={stateActions.updateForm}
+          userAge={state?.formData?.formDataStepOne?.dateOfBirth}
+          handleBack={handleBack}
+          handleSubmit={onSubmit(2)}
+        />
+      )}
+      <Stepper current={currentStep - 1} />
+    </WrapperContainer>
   );
 };
 
