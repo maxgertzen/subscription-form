@@ -8,56 +8,64 @@ interface StepperProps {
   current: number;
 }
 
-const StepsContainer = styled.div`
+const StyledSteps = styled(Steps)`
+  position: absolute;
   width: 100%;
-  background-color: #201a58;
+  bottom: 0;
+  padding: 1.5rem 0.75rem 0.5rem;
+  background-color: ${(props) => props.theme.color.secondary};
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-`;
 
-const StyledSteps = styled(Steps)`
   .ant-steps-item-wait {
-    color: #ffefe3;
-    background-color: #201a58;
+    color: ${(props) => props.theme.color.light};
+    .ant-steps-item-icon {
+      background-color: ${(props) => props.theme.color.grey};
+      border-color: ${(props) => props.theme.color.white};
+    }
   }
 
   .ant-steps-item-finish {
-    color: #ffefe3;
-    background-color: #201a58;
+    color: ${(props) => props.theme.color.light};
+    .ant-steps-item-icon {
+      background-color: ${(props) => props.theme.color.secondary};
+      border-color: ${(props) => props.theme.color.white};
+    }
   }
   .ant-steps-item-active {
-    color: #201a58;
-    background-color: #ffefe3;
+    color: ${(props) => props.theme.color.secondary};
+    .ant-steps-item-icon {
+      background-color: ${(props) => props.theme.color.secondary};
+      border-color: ${(props) => props.theme.color.white};
+    }
   }
   .ant-steps-item-title {
-    font-size: 1.5rem;
-    color: #ffefe3;
+    font-size: 0.75rem;
+    color: ${(props) => props.theme.color.white} !important;
   }
 
   .ant-steps-item-tail::after {
-    background-color: #ffefe3;
+    background-color: ${(props) => props.theme.color.white} !important;
   }
 `;
 
 const Stepper: React.FC<StepperProps> = ({ current }) => {
   return (
-    <StepsContainer>
-      <StyledSteps
-        current={current}
-        items={[
-          {
-            title: STRINGS.STEPS.FIRST,
-          },
-          {
-            title: STRINGS.STEPS.SECOND,
-          },
-          {
-            title: STRINGS.STEPS.THIRD,
-          },
-        ]}
-        labelPlacement='vertical'
-      />
-    </StepsContainer>
+    <StyledSteps
+      current={current}
+      items={[
+        {
+          title: STRINGS.STEPS.FIRST,
+        },
+        {
+          title: STRINGS.STEPS.SECOND,
+        },
+        {
+          title: STRINGS.STEPS.THIRD,
+        },
+      ]}
+      labelPlacement='vertical'
+    />
   );
 };
 
