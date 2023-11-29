@@ -1,24 +1,18 @@
-import { string, object, StringSchema, ObjectSchema } from "yup";
+import { number, string, object, NumberSchema, StringSchema } from 'yup';
 
 export const stepTwoSchema = object().shape(
   {
-    selectedAmount: object({
-      label: string(),
-      value: string(),
-    })
-      .when("customAmount", {
-        is: null,
-        then: (schema) => schema.nonNullable(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .nullable() as ObjectSchema<{ label: string; value: string } | null>,
-    customAmount: string()
-      .when("selectedAmount", {
-        is: null,
-        then: (schema) => schema.required("Custom amount is required"),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .nullable() as StringSchema<string | null>,
+    selectedAmount: number().when('customAmount', {
+      is: null,
+      then: (schema) => schema.required().nonNullable(),
+      otherwise: (schema) => schema.notRequired().nullable(),
+    }) as NumberSchema<number | null>,
+    customAmount: string().when('selectedAmount', {
+      is: null || '',
+      then: (schema) =>
+        schema.required('Custom amount is required').nonNullable(),
+      otherwise: (schema) => schema.notRequired().nullable(),
+    }) as StringSchema<string | null>,
   },
-  [["selectedAmount", "customAmount"]]
+  [['selectedAmount', 'customAmount']]
 );

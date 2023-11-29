@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from "react";
-import { CheckmarkStatus } from "../../interfaces";
-import styled from "styled-components";
+import React, { PropsWithChildren } from 'react';
+import { CheckmarkStatus } from '../../interfaces';
+import styled from 'styled-components';
 
 interface StyledInputWithCheckmarkProps {
   checkmarkStatus?: CheckmarkStatus;
@@ -27,21 +27,21 @@ const Checkmark = styled.svg<
   height: 20px;
   margin-left: 8px;
   fill: ${({ checkmarkStatus, theme }) =>
-    checkmarkStatus === "valid"
+    checkmarkStatus === 'valid'
       ? theme.color.main
-      : checkmarkStatus === "focused"
-      ? theme.color.mainLight
-      : theme.color.grey};
+      : checkmarkStatus === 'focused'
+        ? theme.color.mainLight
+        : theme.color.grey};
   transition: all 0.3s ease;
   &:hover {
-    cursor: ${({ isClickable }) => (isClickable ? "pointer" : "auto")};
+    cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'auto')};
   }
 `;
 
 const StyledInputWithCheckmark: React.FC<
   PropsWithChildren<StyledInputWithCheckmarkProps>
 > = ({
-  checkmarkStatus = "neutral",
+  checkmarkStatus = 'neutral',
   onCheckmarkClick = undefined,
   children,
 }) => {

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { Steps } from "antd";
-import styled from "styled-components";
-import { STRINGS } from "../../language";
+import { Steps } from 'antd';
+import styled from 'styled-components';
+import { STRINGS } from '../../language';
 
 interface StepperProps {
   current: number;
@@ -30,6 +30,9 @@ const StyledSteps = styled(Steps)`
     .ant-steps-item-icon {
       background-color: ${(props) => props.theme.color.secondary};
       border-color: ${(props) => props.theme.color.white};
+      .ant-steps-icon {
+        color: ${(props) => props.theme.color.white};
+      }
     }
   }
   .ant-steps-item-active {

@@ -1,8 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import { useFormContext } from "react-hook-form";
-import StyledInputWithCheckmark from "../../theme/styles/StyledInputWithCheckmark";
-import { StepOneValues } from "../../interfaces";
+import React from 'react';
+import styled from 'styled-components';
+import { useFormContext } from 'react-hook-form';
+import StyledInputWithCheckmark from '../../theme/styles/StyledInputWithCheckmark';
+import { StepOneValues } from '../../interfaces';
+import { SharedTypographyStyles } from '../../theme/styles';
 
 interface FormCheckboxProps {
   label: string;
@@ -15,6 +16,7 @@ const Checkbox = styled.input`
 `;
 
 const CheckboxLabel = styled.label`
+  ${SharedTypographyStyles}
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -23,18 +25,18 @@ const CheckboxLabel = styled.label`
 
 const FormCheckbox: React.FC<FormCheckboxProps> = ({ label }) => {
   const { register, watch, setValue } = useFormContext<StepOneValues>();
-  const isChecked = watch("checkbox");
+  const isChecked = watch('checkbox');
 
   const handleCheckmarkClick = () => {
-    setValue("checkbox", !isChecked);
+    setValue('checkbox', !isChecked);
   };
 
   return (
     <StyledInputWithCheckmark
-      checkmarkStatus={isChecked ? "valid" : "neutral"}
+      checkmarkStatus={isChecked ? 'valid' : 'neutral'}
       onCheckmarkClick={handleCheckmarkClick}>
       <CheckboxLabel>
-        <Checkbox type='checkbox' {...register("checkbox")} />
+        <Checkbox type='checkbox' {...register('checkbox')} />
         {label}
       </CheckboxLabel>
     </StyledInputWithCheckmark>

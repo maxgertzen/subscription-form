@@ -1,6 +1,6 @@
-import "styled-components";
+import 'styled-components';
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     borderRadius: {
       button: string;
@@ -15,6 +15,7 @@ declare module "styled-components" {
       white: string;
       black: string;
       grey: string;
+      red: string;
     };
     fontFamily: {
       main: string;

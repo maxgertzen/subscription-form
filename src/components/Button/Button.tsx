@@ -1,52 +1,52 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-const StyledButton = styled.input<{ isPrimary: boolean }>`
+const StyledButton = styled.input<{ primary: boolean }>`
+  font-family: ${({ theme }) => theme.fontFamily.main};
+  font-size: 1rem;
   width: 100%;
   padding: 10px 5px;
   max-height: 38px;
   border-radius: 60px;
-  background: ${({ disabled, isPrimary, theme }) =>
+  background: ${({ disabled, primary, theme }) =>
     disabled
       ? theme.color.grey
-      : isPrimary
-      ? theme.color.main
-      : theme.color.black};
+      : primary
+        ? theme.color.main
+        : theme.color.white};
   text-align: center;
-  color: ${({ disabled, isPrimary, theme }) =>
-    disabled
-      ? theme.color.white
-      : isPrimary
-      ? theme.color.white
-      : theme.color.black};
-  border: none;
+  color: ${({ theme, primary }) =>
+    primary ? theme.color.white : theme.color.black};
+  border: ${({ theme, primary }) =>
+    primary ? 'none' : `1px solid ${theme.color.black}`};
   transition: all 0.3s ease;
-  margin-bottom: 1rem;
-  &[disabled="false"]:hover {
-    background: ${({ isPrimary, theme }) =>
-      isPrimary ? theme.color.mainLight : theme.color.black};
-    color: white;
+  margin: 0.5rem 0;
+  &:not([disabled]):hover {
+    background: ${({ primary, theme }) =>
+      primary ? theme.color.mainLight : theme.color.black};
+    color: ${({ primary, theme }) =>
+      primary ? theme.color.white : theme.color.white};
     cursor: pointer;
   }
 `;
 
 interface ButtonProps {
   label: string;
-  type?: "submit" | "button";
+  type?: 'submit' | 'button';
   disabled?: boolean;
   handleClick?: () => void;
 }
 
 const Button: React.FC<ButtonProps> = ({
   label,
-  type = "submit",
+  type = 'submit',
   disabled = false,
   handleClick,
 }) => {
   return (
     <StyledButton
       disabled={disabled}
-      isPrimary={type === "submit"}
+      primary={type === 'submit'}
       type={type}
       value={label}
       onClick={handleClick}

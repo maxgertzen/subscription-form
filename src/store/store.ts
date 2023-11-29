@@ -1,5 +1,5 @@
-import { createStore } from "little-state-machine";
-import { StepOneValues, StepTwoValues } from "../interfaces";
+import { createStore } from 'little-state-machine';
+import { StepOneValues, StepTwoValues } from '../interfaces';
 
 export interface State {
   formData: {
@@ -10,7 +10,9 @@ export interface State {
 
 createStore({
   formData: {
-    formDataStepOne: {} as StepOneValues,
+    formDataStepOne: {
+      checkbox: true,
+    } as StepOneValues,
     formDataStepTwo: {} as StepTwoValues,
   },
 });

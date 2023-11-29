@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-import FormTextInput from "../../FormTextInput/FormTextInput";
-import FormDatePicker from "../../FormDatePicker/FormDatePicker";
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import FormTextInput from '../../FormTextInput/FormTextInput';
+import FormDatePicker from '../../FormDatePicker/FormDatePicker';
 
-import { STRINGS } from "../../../language";
-import FormCheckbox from "../../FormCheckbox/FormCheckbox";
-import { FormValues, StepOneValues } from "../../../interfaces";
-import StyledForm from "../../../theme/styles/StyledForm";
-import Button from "../../Button/Button";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { stepOneSchema } from "../../../validations";
+import { STRINGS } from '../../../language';
+import FormCheckbox from '../../FormCheckbox/FormCheckbox';
+import { FormValues, StepOneValues } from '../../../interfaces';
+import StyledForm from '../../../theme/styles/StyledForm';
+import Button from '../../Button/Button';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { stepOneSchema } from '../../../validations';
 
 interface StepOneFormProps {
   initialValues: StepOneValues;
@@ -25,6 +25,7 @@ const StepOneForm: React.FC<StepOneFormProps> = ({
 }) => {
   const methods = useForm<StepOneValues>({
     defaultValues: initialValues,
+    mode: 'all',
     resolver: yupResolver(stepOneSchema),
   });
 

@@ -3,18 +3,18 @@ export type StepOneValues = {
   lastName: string;
   email: string;
   phoneNumber: string;
-  dateOfBirth: Date;
+  dateOfBirth: Date | null;
   checkbox: boolean;
 };
 
 export type RadioButtonValue = {
   label: string;
-  value: string;
+  value: number;
 };
 
 export type StepTwoValues = {
   customAmount: string | null;
-  selectedAmount: RadioButtonValue | null;
+  selectedAmount: number | null;
 };
 
 export interface FormValues {
@@ -22,4 +22,4 @@ export interface FormValues {
   formDataStepTwo: StepTwoValues;
 }
 
-export type CheckmarkStatus = "valid" | "focused" | "neutral";
+export type CheckmarkStatus = 'valid' | 'focused' | 'neutral';
