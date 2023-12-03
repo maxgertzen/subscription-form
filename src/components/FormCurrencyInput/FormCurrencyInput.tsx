@@ -31,22 +31,17 @@ const FormCurrencyInput: React.FC<FormCurrencyInputProps> = ({
     <Controller
       name='customAmount'
       control={control}
-      render={({ field: { ref, onChange, value, ...fieldProps } }) => (
+      render={({ field: { onChange, value } }) => (
         <NumericFormat
           allowNegative={false}
           thousandSeparator={true}
-          prefix={'₪'}
+          prefix='₪'
           placeholder={placeholder}
           customInput={StyledCurrencyInput}
-          getInputRef={ref}
-          value={value}
+          value={value ?? ''}
           onValueChange={(values) => {
-            onChange(String(values.floatValue));
+            onChange(values.value);
           }}
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-          {...fieldProps}
         />
       )}
     />

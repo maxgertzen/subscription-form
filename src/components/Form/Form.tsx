@@ -6,13 +6,40 @@ import StepOneForm from './StepOneForm/StepOneForm';
 import StepTwoForm from './StepTwoForm/StepTwoForm';
 import Stepper from '../Stepper/Stepper';
 import styled from 'styled-components';
-import {
-  Typography,
-  VerticalSpacing,
-  StyledFormWrapper,
-} from '../../theme/styles';
+import { Typography, VerticalSpacing } from '../../theme/styles';
 import { STRINGS } from '../../language';
+import { convertToDate } from '../../utils/dateFormatter';
+import Loader from '../Loader/Loader';
+import SuccessMessage from '../SuccessMessage/SuccessMessage';
+import { Alert } from 'antd';
+import {
+  useProductVariationOptions,
+  useUserInitialValues,
+} from '../../api/actions/getData.actions';
+import {
+  usePostProductVariation,
+  usePostUserData,
+} from '../../api/actions/postData.actions';
 
+const Container = styled.div`
+  position: relative;
+  height: inherit;
+  width: inherit;
+`;
+
+const AlertWrapper = styled.div`
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  position: absolute;
+  width: calc(100% - 1rem);
+
+  .ant-alert {
+    width: 100%;
+  }
+`;
+
+const TypographyWrapper = styled.div`
+  padding: 0.5rem 2rem;
+`;
 const StyledHeader = styled.h1<{ align?: React.CSSProperties['alignSelf'] }>`
   ${Typography.HeadingOne};
   align-self: ${({ align }) => align || 'flex-start'};
@@ -23,60 +50,94 @@ const StyledHeader = styled.h1<{ align?: React.CSSProperties['alignSelf'] }>`
 
 const StyledParagraph = styled.p`
   ${Typography.Paragraph};
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
 `;
 
 const Form: React.FC = () => {
-  const [currentStep, setCurrentStep] = React.useState<1 | 2>(2);
-  const { actions: stateActions, state } = useStateMachine({ ...actions });
+  const [currentStep, setCurrentStep] = React.useState<number>(1);
+  const stepOneInitialValues = useUserInitialValues();
+  const stepTwoInitialValues = useProductVariationOptions();
 
-  const onSubmit = (step: number) => () => {
-    if (step === 1) {
-      setCurrentStep(2);
-      return;
-    }
-    console.log(state?.formData);
-  };
+  const updateUserCallback = usePostUserData();
+  const updateProductSelectionCallback = usePostProductVariation();
+
+  const {
+    actions: stateActions,
+    state: { formData, isLoading, isError },
+  } = useStateMachine({ ...actions });
+
+  const handleSetStep = (step: number) => () => setCurrentStep(step);
+
+  const handleStepOneSubmit = () => updateUserCallback;
+
+  const handleStepTwoSubmit = () => updateProductSelectionCallback;
 
   const handleBack = () => {
-    setCurrentStep(1);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
+  React.useEffect(() => {
+    stateActions.updateStore({
+      formDataStepOne: {
+        ...stepOneInitialValues,
+        dateOfBirth: convertToDate(stepOneInitialValues?.dateOfBirth),
+      },
+    });
+  }, [stepOneInitialValues, stateActions]);
+
   return (
-    <StyledFormWrapper>
-      {currentStep === 1 && (
+    <Container>
+      {isError && (
+        <AlertWrapper>
+          <Alert
+            message={STRINGS.ERROR.TITLE}
+            description={STRINGS.ERROR.SUBTITLE}
+            type='error'
+            closable
+          />
+        </AlertWrapper>
+      )}
+      {isLoading && <Loader />}
+      {currentStep === 1 && !isLoading && (
         <>
-          <StyledHeader>
-            {STRINGS.STEP_ONE_TITLE.START}
-            <span>{STRINGS.STEP_ONE_TITLE.END}</span>
-          </StyledHeader>
-          <StyledParagraph>
-            {STRINGS.STEP_ONE_SUBTITLE.START}
-            <strong>{STRINGS.STEP_ONE_SUBTITLE.END}</strong>
-          </StyledParagraph>
+          <TypographyWrapper>
+            <StyledHeader>
+              {STRINGS.STEP_ONE_TITLE.START}
+              <span>{STRINGS.STEP_ONE_TITLE.END}</span>
+            </StyledHeader>
+            <StyledParagraph>
+              {STRINGS.STEP_ONE_SUBTITLE.START}
+              <strong>{STRINGS.STEP_ONE_SUBTITLE.END}</strong>
+            </StyledParagraph>
+          </TypographyWrapper>
           <StepOneForm
-            initialValues={state?.formData?.formDataStepOne}
-            handleUpdate={stateActions.updateForm}
-            handleSubmit={onSubmit(1)}
+            initialValues={formData?.formDataStepOne}
+            setStep={handleSetStep(2)}
+            handleUpdate={stateActions.updateStore}
+            handleSubmit={handleStepOneSubmit()}
           />
         </>
       )}
-      {currentStep === 2 && (
+      {currentStep === 2 && !isLoading && (
         <>
           <VerticalSpacing units={3} />
           <StyledHeader align='center'>{STRINGS.STEP_TWO_TITLE}</StyledHeader>
-          <VerticalSpacing units={2} />
           <StepTwoForm
-            initialValues={state?.formData?.formDataStepTwo}
-            handleUpdate={stateActions.updateForm}
-            userAge={state?.formData?.formDataStepOne?.dateOfBirth}
+            handleUpdate={stateActions.updateStore}
+            options={stepTwoInitialValues?.options}
+            userAge={formData?.formDataStepOne?.dateOfBirth}
+            setStep={handleSetStep(3)}
             handleBack={handleBack}
-            handleSubmit={onSubmit(2)}
+            handleSubmit={handleStepTwoSubmit()}
           />
         </>
       )}
+      {currentStep === 3 && !isLoading && <SuccessMessage />}
       <Stepper current={currentStep - 1} />
-    </StyledFormWrapper>
+    </Container>
   );
 };
 

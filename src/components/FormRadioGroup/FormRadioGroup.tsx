@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFormContext, Controller, useWatch } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { RadioButtonValue, StepTwoValues } from '../../interfaces';
 import { SharedTypographyStyles } from '../../theme/styles/StyledTypography';
 import { ErrorMessage } from '@hookform/error-message';
@@ -38,6 +38,12 @@ const RadioButtonLabel = styled.label<{
   cursor: pointer;
   transition: all 0.3s ease;
   grid-column: auto;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
   &:hover {
     cursor: pointer;
   }
@@ -59,43 +65,21 @@ const ChildrenWrapper = styled.div`
 interface FormRadioButtonGroupProps {
   options: RadioButtonValue[];
   userAge?: number;
+  handleRadioClick: (
+    option: RadioButtonValue,
+    onChange: (value: string | null) => void
+  ) => void;
+  checkedValue: string | null;
   children?: React.ReactNode;
 }
 
 const FormRadioButtonGroup: React.FC<FormRadioButtonGroupProps> = ({
-  userAge = 100,
   options,
+  checkedValue,
+  handleRadioClick,
   children,
 }) => {
-  const { control, formState, setValue } = useFormContext<StepTwoValues>();
-  const customAmount = useWatch({ name: 'customAmount', exact: true });
-  const selectedValue = useWatch({ name: 'selectedAmount', exact: true });
-
-  const handleRadioClick = (
-    option: RadioButtonValue,
-    selectedValue: number | null,
-    onChange: (value: number | null) => void
-  ) => {
-    if (selectedValue !== option?.value) {
-      setValue('customAmount', '');
-    } else {
-      setValue('selectedAmount', null);
-    }
-    onChange(selectedValue === option?.value ? null : option.value);
-  };
-
-  React.useEffect(() => {
-    if (customAmount) {
-      setValue('selectedAmount', null);
-    }
-  }, [customAmount, setValue]);
-
-  const availableOptions = React.useMemo(() => {
-    if (userAge > 25) {
-      return options.filter((option) => option?.value !== 25);
-    }
-    return options;
-  }, [options, userAge]);
+  const { control, formState } = useFormContext<StepTwoValues>();
 
   const renderRadioButton = (
     option: RadioButtonValue,
@@ -116,17 +100,15 @@ const FormRadioButtonGroup: React.FC<FormRadioButtonGroupProps> = ({
 
     return (
       <Controller
-        key={option?.value}
+        key={index}
         name='selectedAmount'
         control={control}
-        render={({ field }) => (
+        render={({ field: { onChange, ...fieldProps } }) => (
           <>
             <RadioButtonLabel
-              checked={selectedValue === option?.value}
+              checked={Number(checkedValue) === option?.value}
               htmlFor={`radio-button-${index + 1}`}
-              onClick={() =>
-                handleRadioClick(option, selectedValue, field.onChange)
-              }
+              onClick={() => handleRadioClick(option, onChange)}
               style={{
                 gridColumn,
               }}>
@@ -134,9 +116,9 @@ const FormRadioButtonGroup: React.FC<FormRadioButtonGroupProps> = ({
             </RadioButtonLabel>
             <RadioButtonInput
               type='radio'
-              {...field}
+              {...fieldProps}
               value={option?.value}
-              checked={selectedValue === option?.value}
+              checked={Number(checkedValue) === option?.value}
               id={`radio-button-${index + 1}`}
             />
           </>
@@ -147,25 +129,18 @@ const FormRadioButtonGroup: React.FC<FormRadioButtonGroupProps> = ({
 
   return (
     <StyledButtonGroup>
-      {availableOptions.map((option, index) =>
-        renderRadioButton(option, index, availableOptions.length)
+      {options.map((option, index) =>
+        renderRadioButton(option, index, options.length)
       )}
       <ChildrenWrapper style={{ gridRow: Math.ceil(options.length / 3) + 1 }}>
         {children}
       </ChildrenWrapper>
       <ChildrenWrapper>
         <ErrorMessage
-          name='selectedAmount'
-          errors={formState.errors}
-          render={({ message }) => (
-            <StyledErrorMessage>{message}</StyledErrorMessage>
-          )}
-        />
-        <ErrorMessage
           name='customAmount'
           errors={formState.errors}
           render={({ message }) => (
-            <StyledErrorMessage>{message}</StyledErrorMessage>
+            <StyledErrorMessage isCentered>{message}</StyledErrorMessage>
           )}
         />
       </ChildrenWrapper>

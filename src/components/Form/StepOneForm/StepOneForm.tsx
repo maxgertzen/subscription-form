@@ -6,20 +6,30 @@ import FormDatePicker from '../../FormDatePicker/FormDatePicker';
 
 import { STRINGS } from '../../../language';
 import FormCheckbox from '../../FormCheckbox/FormCheckbox';
-import { FormValues, StepOneValues } from '../../../interfaces';
+import {
+  FormValues,
+  StepOneValues,
+  SuccessfullResponse,
+  UserDetailsRequestBody,
+} from '../../../interfaces';
 import StyledForm from '../../../theme/styles/StyledForm';
 import Button from '../../Button/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { stepOneSchema } from '../../../validations';
+import { formatDate } from '../../../utils/dateFormatter';
 
 interface StepOneFormProps {
-  initialValues: StepOneValues;
+  initialValues: Partial<StepOneValues>;
   handleUpdate: (data: Partial<FormValues>) => void;
-  handleSubmit: () => void;
+  setStep: () => void;
+  handleSubmit: (
+    body?: UserDetailsRequestBody | undefined
+  ) => Promise<SuccessfullResponse | undefined>;
 }
 
 const StepOneForm: React.FC<StepOneFormProps> = ({
   initialValues,
+  setStep,
   handleUpdate,
   handleSubmit,
 }) => {
@@ -29,9 +39,13 @@ const StepOneForm: React.FC<StepOneFormProps> = ({
     resolver: yupResolver(stepOneSchema),
   });
 
-  const onSubmit: SubmitHandler<StepOneValues> = (data) => {
-    handleUpdate({ formDataStepOne: data });
-    handleSubmit();
+  const onSubmit: SubmitHandler<StepOneValues> = async (submittedData) => {
+    handleUpdate({ formDataStepOne: submittedData });
+    await handleSubmit({
+      ...submittedData,
+      dateOfBirth: formatDate(submittedData.dateOfBirth),
+    });
+    setStep();
   };
 
   const { FORM_LABELS, BUTTONS } = STRINGS;
