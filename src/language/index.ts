@@ -13,7 +13,8 @@ export const STRINGS = {
     INVALID_EMAIL: 'דואר אלקטרוני לא תקין',
     INVALID_PHONE: 'מספר טלפון לא תקין',
     INVALID_DATE: 'אין להזין תאריך עתידי, יש להזין תאריך עד 10 שנים אחורה',
-    INVALID_AMOUNT: 'סכום לא תקין',
+    INVALID_AMOUNT: 'סכום לא תקין - מינימום 50 ש"ח',
+    REQUIRED_SELECTION: 'יש לבחור סכום תמיכה או להזין סכום אחר',
   },
   STEPS: {
     FIRST: 'פרטים אישיים',

@@ -1,4 +1,5 @@
 import { string, object } from 'yup';
+import { STRINGS } from '../language';
 
 export const stepTwoSchema = object()
   .shape(
@@ -18,10 +19,10 @@ export const stepTwoSchema = object()
             !selectedAmount || selectedAmount.trim() === '',
           then: (schema) =>
             schema
-              .required('Custom amount is required')
+              .required(STRINGS.FORM_ERRORS.REQUIRED_SELECTION)
               .test(
                 'is-greater-than-50',
-                'Custom amount must be at least 50',
+                STRINGS.FORM_ERRORS.INVALID_AMOUNT,
                 (value) => !value || Number(value) >= 50
               ),
           otherwise: (schema) => schema.notRequired(),
@@ -29,13 +30,9 @@ export const stepTwoSchema = object()
     },
     [['selectedAmount', 'customAmount']]
   )
-  .test(
-    'at-least-one',
-    'Either selected amount or custom amount must be provided',
-    (values) => {
-      return (
-        !!(values.selectedAmount && values.selectedAmount.trim()) ||
-        !!(values.customAmount && values.customAmount.trim())
-      );
-    }
-  );
+  .test('at-least-one', STRINGS.FORM_ERRORS.REQUIRED_SELECTION, (values) => {
+    return (
+      !!(values.selectedAmount && values.selectedAmount.trim()) ||
+      !!(values.customAmount && values.customAmount.trim())
+    );
+  });

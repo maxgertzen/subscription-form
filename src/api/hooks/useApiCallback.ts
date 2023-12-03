@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useCallback } from 'react';
 import axiosInstance from '../services/axiosService';
 import { useStateMachine } from 'little-state-machine';
@@ -56,6 +58,15 @@ const useApiCallback = <TResponse, TRequestBody = unknown>({
     },
     [url, type]
   );
+
+  React.useEffect(() => {
+    return () => {
+      stateActions.updateStore({
+        isError: false,
+        isLoading: false,
+      });
+    };
+  }, []);
 
   return apiCallback;
 };

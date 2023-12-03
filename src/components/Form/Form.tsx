@@ -86,6 +86,13 @@ const Form: React.FC = () => {
         dateOfBirth: convertToDate(stepOneInitialValues?.dateOfBirth),
       },
     });
+
+    return () => {
+      stateActions.updateStore({
+        isError: false,
+        isLoading: false,
+      });
+    };
   }, [stepOneInitialValues, stateActions]);
 
   return (
