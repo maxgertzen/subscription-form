@@ -11,7 +11,6 @@ const StyledFormWrapper = styled.div`
   box-sizing: border-box;
   direction: rtl;
   background-color: #f5f2ed;
-  padding: 1rem 3rem;
   text-align: right;
   border-radius: ${({ theme }) => theme.borderRadius.container};
 `;

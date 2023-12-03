@@ -4,7 +4,8 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  padding: 1.5rem 3rem;
+  max-width: 100%;
 `;
 
 export default StyledForm;
