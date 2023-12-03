@@ -3,9 +3,11 @@ import { StepOneValues, StepTwoValues } from '../interfaces';
 
 export interface State {
   formData: {
-    formDataStepOne: StepOneValues;
-    formDataStepTwo: StepTwoValues;
+    formDataStepOne: Partial<StepOneValues>;
+    formDataStepTwo: Partial<StepTwoValues>;
   };
+  isLoading: boolean;
+  isError: boolean;
 }
 
 createStore({
@@ -15,4 +17,6 @@ createStore({
     } as StepOneValues,
     formDataStepTwo: {} as StepTwoValues,
   },
+  isLoading: false,
+  isError: false,
 });
