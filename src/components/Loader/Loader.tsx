@@ -1,11 +1,21 @@
-import React from "react";
+import React from 'react';
 
-import { Spin } from "antd";
+import { Spin } from 'antd';
 
-import styled from "styled-components";
-import { STRINGS } from "../../language";
+import styled from 'styled-components';
 
 const LoaderWrapper = styled.div`
+  height: inherit;
+  width: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ant-spin-dot {
+    font-size: 4.5rem;
+    margin-bottom: 6rem;
+  }
+
   .ant-spin-dot-item {
     background-color: #39b04c;
   }
@@ -18,9 +28,7 @@ const LoaderWrapper = styled.div`
 const Loader: React.FC = () => {
   return (
     <LoaderWrapper>
-      <Spin size='large' tip={STRINGS.LOADER_TEXT}>
-        <div />
-      </Spin>
+      <Spin size='large' />
     </LoaderWrapper>
   );
 };

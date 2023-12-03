@@ -18,15 +18,16 @@ const StyledSteps = styled(Steps)`
   border-bottom-right-radius: 12px;
 
   .ant-steps-item-wait {
-    color: ${(props) => props.theme.color.light};
     .ant-steps-item-icon {
-      background-color: ${(props) => props.theme.color.grey};
+      background-color: ${(props) => props.theme.color.secondary};
       border-color: ${(props) => props.theme.color.white};
+      .ant-steps-icon {
+        color: ${(props) => props.theme.color.white};
+      }
     }
   }
 
   .ant-steps-item-finish {
-    color: ${(props) => props.theme.color.light};
     .ant-steps-item-icon {
       background-color: ${(props) => props.theme.color.secondary};
       border-color: ${(props) => props.theme.color.white};
@@ -36,10 +37,12 @@ const StyledSteps = styled(Steps)`
     }
   }
   .ant-steps-item-active {
-    color: ${(props) => props.theme.color.secondary};
     .ant-steps-item-icon {
-      background-color: ${(props) => props.theme.color.secondary};
+      background-color: ${(props) => props.theme.color.white};
       border-color: ${(props) => props.theme.color.white};
+      .ant-steps-icon {
+        color: ${(props) => props.theme.color.secondary};
+      }
     }
   }
   .ant-steps-item-title {
