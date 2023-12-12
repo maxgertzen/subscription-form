@@ -44,6 +44,10 @@ export type SuccessfullResponse = {
   message: string;
 };
 
+export type EmailResponse = {
+  isNew: boolean;
+};
+
 export type ProductVariationOption = {
   variationId: number;
   price: number;
@@ -62,6 +66,16 @@ export type ProductVariationsRequestBody = {
 export interface ApplicationStatus {
   isLoading: boolean;
   isError: boolean;
+  isWarning: boolean;
+  warningCode: string;
 }
 
 export type CheckmarkStatus = 'valid' | 'focused' | 'neutral';
+
+export interface WPErrorResponse {
+  code: string;
+  message: string;
+  data: {
+    status: number;
+  };
+}

@@ -8,6 +8,8 @@ export interface State {
   };
   isLoading: boolean;
   isError: boolean;
+  isWarning: boolean;
+  warningCode: string;
 }
 
 createStore({
@@ -19,4 +21,6 @@ createStore({
   },
   isLoading: false,
   isError: false,
+  isWarning: false,
+  warningCode: '',
 });

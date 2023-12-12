@@ -8,7 +8,7 @@ import Stepper from '../Stepper/Stepper';
 import styled from 'styled-components';
 import { Typography, VerticalSpacing } from '../../theme/styles';
 import { STRINGS } from '../../language';
-import { convertToDate } from '../../utils/dateFormatter';
+import { convertToDate, formatDate } from '../../utils/dateFormatter';
 import Loader from '../Loader/Loader';
 import SuccessMessage from '../SuccessMessage/SuccessMessage';
 import { Alert } from 'antd';
@@ -17,9 +17,11 @@ import {
   useUserInitialValues,
 } from '../../api/actions/getData.actions';
 import {
-  usePostProductVariation,
-  usePostUserData,
+  useCheckUserEmail,
+  usePostFormData,
 } from '../../api/actions/postData.actions';
+import { ProductVariationsRequestBody, StepOneValues } from '../../interfaces';
+import WarningAlert from '../WarningAlert/WarningAlert';
 
 const Container = styled.div`
   position: relative;
@@ -58,25 +60,38 @@ const Form: React.FC = () => {
   const [currentStep, setCurrentStep] = React.useState<number>(1);
   const stepOneInitialValues = useUserInitialValues();
   const stepTwoInitialValues = useProductVariationOptions();
-
-  const updateUserCallback = usePostUserData();
-  const updateProductSelectionCallback = usePostProductVariation();
+  const submitFormCallback = usePostFormData();
 
   const {
     actions: stateActions,
-    state: { formData, isLoading, isError },
+    state: { formData, isLoading, isError, isWarning, warningCode },
   } = useStateMachine({ ...actions });
 
   const handleSetStep = (step: number) => () => setCurrentStep(step);
 
-  const handleStepOneSubmit = () => updateUserCallback;
+  const handleStepOneSubmit = useCheckUserEmail();
 
-  const handleStepTwoSubmit = () => updateProductSelectionCallback;
+  const handleStepTwoSubmit = async (body: ProductVariationsRequestBody) => {
+    const { formDataStepOne } = formData;
+    await submitFormCallback({
+      ...body,
+      ...(formDataStepOne as StepOneValues),
+      dateOfBirth: formatDate(formDataStepOne?.dateOfBirth ?? null),
+    });
+  };
 
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleAlertAfterClose = () => {
+    stateActions.updateStore({
+      isError: false,
+      isWarning: false,
+      warningCode: '',
+    });
   };
 
   React.useEffect(() => {
@@ -91,12 +106,20 @@ const Form: React.FC = () => {
       stateActions.updateStore({
         isError: false,
         isLoading: false,
+        isWarning: false,
+        warningCode: '',
       });
     };
   }, [stepOneInitialValues, stateActions]);
 
   return (
     <Container>
+      {isWarning && (
+        <WarningAlert
+          code={warningCode}
+          handleAfterClose={handleAlertAfterClose}
+        />
+      )}
       {isError && (
         <AlertWrapper>
           <Alert
@@ -104,6 +127,7 @@ const Form: React.FC = () => {
             description={STRINGS.ERROR.SUBTITLE}
             type='error'
             closable
+            afterClose={handleAlertAfterClose}
           />
         </AlertWrapper>
       )}
@@ -124,7 +148,7 @@ const Form: React.FC = () => {
             initialValues={formData?.formDataStepOne}
             setStep={handleSetStep(2)}
             handleUpdate={stateActions.updateStore}
-            handleSubmit={handleStepOneSubmit()}
+            handleSubmit={handleStepOneSubmit}
           />
         </>
       )}
@@ -138,7 +162,7 @@ const Form: React.FC = () => {
             userAge={formData?.formDataStepOne?.dateOfBirth}
             setStep={handleSetStep(3)}
             handleBack={handleBack}
-            handleSubmit={handleStepTwoSubmit()}
+            handleSubmit={handleStepTwoSubmit}
           />
         </>
       )}

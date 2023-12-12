@@ -4,7 +4,7 @@ import { StartSessionResponse } from '../../interfaces';
 import { errorCodes } from './errorCodes';
 
 const baseURL =
-  'https://8e9715b2-bc5f-42cf-8209-554284dfeefc.mock.pstmn.io/radical-form/v1/';
+  'https://7b3d5630-a61f-47af-835f-62b4639d9914.mock.pstmn.io/radical-form/v1/';
 
 const axiosInstance: AxiosInstance = axios.create({ baseURL });
 

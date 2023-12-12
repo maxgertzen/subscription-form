@@ -6,25 +6,17 @@ import FormDatePicker from '../../FormDatePicker/FormDatePicker';
 
 import { STRINGS } from '../../../language';
 import FormCheckbox from '../../FormCheckbox/FormCheckbox';
-import {
-  FormValues,
-  StepOneValues,
-  SuccessfullResponse,
-  UserDetailsRequestBody,
-} from '../../../interfaces';
+import { EmailResponse, FormValues, StepOneValues } from '../../../interfaces';
 import StyledForm from '../../../theme/styles/StyledForm';
 import Button from '../../Button/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { stepOneSchema } from '../../../validations';
-import { formatDate } from '../../../utils/dateFormatter';
 
 interface StepOneFormProps {
   initialValues: Partial<StepOneValues>;
   handleUpdate: (data: Partial<FormValues>) => void;
   setStep: () => void;
-  handleSubmit: (
-    body?: UserDetailsRequestBody | undefined
-  ) => Promise<SuccessfullResponse | undefined>;
+  handleSubmit: (email: string) => Promise<EmailResponse | undefined>;
 }
 
 const StepOneForm: React.FC<StepOneFormProps> = ({
@@ -41,11 +33,10 @@ const StepOneForm: React.FC<StepOneFormProps> = ({
 
   const onSubmit: SubmitHandler<StepOneValues> = async (submittedData) => {
     handleUpdate({ formDataStepOne: submittedData });
-    await handleSubmit({
-      ...submittedData,
-      dateOfBirth: formatDate(submittedData.dateOfBirth),
-    });
-    setStep();
+    const data = await handleSubmit(submittedData.email);
+    if (data && 'isNew' in data) {
+      setStep();
+    }
   };
 
   const { FORM_LABELS, BUTTONS } = STRINGS;
