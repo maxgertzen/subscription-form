@@ -6,7 +6,7 @@ function isApplicationStatus(
 ): payload is Partial<ApplicationStatus> {
   return (
     typeof payload === 'object' &&
-    ('isLoading' in payload || 'isError' in payload)
+    ('isLoading' in payload || 'isError' in payload || 'isWarning' in payload)
   );
 }
 

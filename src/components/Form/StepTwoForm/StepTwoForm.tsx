@@ -9,7 +9,6 @@ import {
   ProductVariationsRequestBody,
   StepTwoValues,
   ProductVariationOption,
-  SuccessfullResponse,
   RadioButtonValue,
 } from '../../../interfaces';
 import StyledForm from '../../../theme/styles/StyledForm';
@@ -25,9 +24,7 @@ interface StepTwoFormProps {
   userAge?: Date | null;
   setStep: () => void;
   handleUpdate: (data: Partial<FormValues>) => void;
-  handleSubmit: (
-    body?: ProductVariationsRequestBody | undefined
-  ) => Promise<SuccessfullResponse | undefined>;
+  handleSubmit: (body: ProductVariationsRequestBody) => Promise<void>;
   handleBack: () => void;
 }
 
