@@ -1,8 +1,10 @@
 import React from 'react';
+
 import styled, { useTheme } from 'styled-components';
-import { Typography } from '../../theme/styles';
+
 import ExclamationTriangleIcon from '../../assets/exclamation-triangle-line-icon.svg?react';
 import { STRINGS } from '../../language';
+import { Typography } from '../../theme/styles';
 
 const ErrorContainer = styled.div`
   display: flex;
@@ -19,6 +21,13 @@ const StyledTitle = styled.h2`
 
 const StyledSubtitle = styled.p`
   ${Typography.Paragraph}
+  a {
+    color: ${({ theme }) => theme.color.secondary};
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const SvgContainer = styled.div`

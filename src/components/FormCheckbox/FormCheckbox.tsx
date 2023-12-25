@@ -1,9 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { useFormContext } from 'react-hook-form';
-import StyledInputWithCheckmark from '../../theme/styles/StyledInputWithCheckmark';
+import styled from 'styled-components';
+
 import { StepOneValues } from '../../interfaces';
-import { SharedTypographyStyles } from '../../theme/styles';
+import StyledInputWithCheckmark from '../../theme/styles/StyledInputWithCheckmark';
 
 interface FormCheckboxProps {
   label: string;
@@ -16,7 +17,6 @@ const Checkbox = styled.input`
 `;
 
 const CheckboxLabel = styled.label`
-  ${SharedTypographyStyles}
   cursor: pointer;
   display: flex;
   align-items: center;

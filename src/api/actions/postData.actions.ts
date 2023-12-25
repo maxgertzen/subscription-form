@@ -1,15 +1,15 @@
-import axios, { AxiosError } from 'axios';
-
+import { AxiosError, isAxiosError } from 'axios';
 import { useStateMachine } from 'little-state-machine';
+
 import {
-  SuccessfullResponse,
-  ProductVariationsRequestBody,
-  UserDetailsRequestBody,
   EmailResponse,
+  ProductVariationsRequestBody,
+  SuccessfullResponse,
+  UserDetailsRequestBody,
   WPErrorResponse,
 } from '../../interfaces';
-import useApiCallback from '../hooks/useApiCallback';
 import * as actions from '../../store/actions';
+import useApiCallback from '../hooks/useApiCallback';
 
 const useCheckUserEmail = () => {
   const { actions: stateActions, state } = useStateMachine({ ...actions });
@@ -27,7 +27,7 @@ const useCheckUserEmail = () => {
       });
       return data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         const serverError = error as AxiosError<WPErrorResponse>;
         if (serverError && serverError.response?.data?.code) {
           stateActions.updateStore({
@@ -86,4 +86,4 @@ const usePostFormData = () => {
   };
 };
 
-export { usePostFormData, useCheckUserEmail };
+export { useCheckUserEmail, usePostFormData };

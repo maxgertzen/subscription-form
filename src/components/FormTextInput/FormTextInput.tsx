@@ -1,11 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
-import { useFormContext } from 'react-hook-form';
-import StyledInputWithCheckmark from '../../theme/styles/StyledInputWithCheckmark';
-import { SharedTypographyStyles } from '../../theme/styles/StyledTypography';
-import { StepOneValues } from '../../interfaces';
+
 import { ErrorMessage } from '@hookform/error-message';
+import { useFormContext } from 'react-hook-form';
+import styled from 'styled-components';
+
+import { StepOneValues } from '../../interfaces';
 import { StyledErrorMessage } from '../../theme/styles/StyledErrorMessage';
+import StyledInputWithCheckmark from '../../theme/styles/StyledInputWithCheckmark';
 
 interface StyledInputWithCheckmarkProps {
   label: string;
@@ -13,32 +14,32 @@ interface StyledInputWithCheckmarkProps {
   type?: 'text' | 'tel' | 'email';
 }
 
-const InputField = styled.input<{ isErrored?: boolean }>`
-  ${SharedTypographyStyles}
-  width: 100%;
-  padding: 10px 0;
-  border: unset;
-  border-bottom: 1px solid ${({ theme, isErrored }) =>
-    isErrored ? theme.color.red : theme.color.grey};
-  outline: none;
-  background-color: transparent;
-  &:focus + label,
-  &:not(:placeholder-shown) + label {
-    top: -20px;
-    right: 0;
-    font-size: 12px;
-    color: ${({ theme }) => theme.color.grey}};
+const InputField = styled.input<{ $isErrored?: boolean }>`
+  &&[type] {
+    width: 100%;
+    padding: 10px 0;
+    border: unset;
+    border-bottom: 1px solid ${({ theme, $isErrored }) =>
+      $isErrored ? theme.color.red : theme.color.grey};
+    outline: none;
+    background-color: transparent;
+    &:focus + label,
+    &:not(:placeholder-shown) + label {
+      top: -20px;
+      right: 0;
+      font-size: 12px;
+      color: ${({ theme }) => theme.color.grey}};
+    }
   }
 `;
 
-const Label = styled.label<{ isFocused: boolean; isErrored?: boolean }>`
-  ${SharedTypographyStyles}
+const Label = styled.label<{ $isFocused: boolean; $isErrored?: boolean }>`
   position: absolute;
-  top: ${(props) => (props.isFocused ? '-16px' : '9px')};
-  right: ${(props) => (props.isFocused ? '0px' : '5px')};
-  font-size: ${(props) => (props.isFocused ? '12px' : '16px')};
+  top: ${(props) => (props.$isFocused ? '-16px' : '6px')};
+  right: ${(props) => (props.$isFocused ? '0px' : '5px')};
+  font-size: ${(props) => (props.$isFocused ? '12px' : '16px')};
   color: ${(props) =>
-    props.isFocused ? props.theme.color.grey : props.theme.color.black};
+    props.$isFocused ? props.theme.color.grey : props.theme.color.black};
   transition: all 0.3s ease;
   pointer-events: none;
 `;
@@ -100,15 +101,15 @@ const FormTextInput: React.FC<StyledInputWithCheckmarkProps> = ({
     <StyledInputWithCheckmark
       checkmarkStatus={isValid ? 'valid' : isFocused ? 'focused' : 'neutral'}>
       <Label
-        isFocused={isFocused || false}
-        isErrored={!!formState.errors[name]?.message}>
+        $isFocused={isFocused || false}
+        $isErrored={!!formState.errors[name]?.message}>
         {label}
       </Label>
 
       <InputField
         {...restRegister}
         type={type}
-        isErrored={!!formState.errors[name]?.message}
+        $isErrored={!!formState.errors[name]?.message}
         onFocus={() => setIsFocused(true)}
         onChange={handleChange}
         onBlur={handleBlur}

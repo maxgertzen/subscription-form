@@ -1,30 +1,33 @@
 import React from 'react';
 
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
-import { STRINGS } from '../../../language';
 import {
   FormValues,
-  ProductVariationsResponse,
-  ProductVariationsRequestBody,
-  StepTwoValues,
   ProductVariationOption,
+  ProductVariationsRequestBody,
+  ProductVariationsResponse,
   RadioButtonValue,
+  StepTwoValues,
+  SuccessfullResponse,
 } from '../../../interfaces';
+import { STRINGS } from '../../../language';
 import StyledForm from '../../../theme/styles/StyledForm';
-import FormRadioButtonGroup from '../../FormRadioGroup/FormRadioGroup';
-import FormCurrencyInput from '../../FormCurrencyInput/FormCurrencyInput';
-import Button from '../../Button/Button';
-import { stepTwoSchema } from '../../../validations';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { getUserAge } from '../../../utils/getUserAge';
+import { stepTwoSchema } from '../../../validations';
+import Button from '../../Button/Button';
+import FormCurrencyInput from '../../FormCurrencyInput/FormCurrencyInput';
+import FormRadioButtonGroup from '../../FormRadioGroup/FormRadioGroup';
 
 interface StepTwoFormProps {
   options: ProductVariationsResponse['options'];
   userAge?: Date | null;
   setStep: () => void;
   handleUpdate: (data: Partial<FormValues>) => void;
-  handleSubmit: (body: ProductVariationsRequestBody) => Promise<void>;
+  handleSubmit: (
+    body: ProductVariationsRequestBody
+  ) => Promise<SuccessfullResponse | undefined>;
   handleBack: () => void;
 }
 
@@ -59,13 +62,13 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({
     }
 
     if (selectedVariation?.variationId) {
-      await handleSubmit({
+      const response = await handleSubmit({
         variationId: selectedVariation.variationId,
         price: selectedVariation.isCustomPriceId
           ? Number(formData.customAmount)
           : selectedVariation.price,
       });
-      setStep();
+      if (response?.message) setStep();
     }
   };
 

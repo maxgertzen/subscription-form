@@ -1,9 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
-import { useFormContext, Controller } from 'react-hook-form';
-import { RadioButtonValue, StepTwoValues } from '../../interfaces';
-import { SharedTypographyStyles } from '../../theme/styles/StyledTypography';
+
 import { ErrorMessage } from '@hookform/error-message';
+import { Controller, useFormContext } from 'react-hook-form';
+import styled from 'styled-components';
+
+import { RadioButtonValue, StepTwoValues } from '../../interfaces';
 import { StyledErrorMessage } from '../../theme/styles/StyledErrorMessage';
 
 const StyledButtonGroup = styled.div`
@@ -21,7 +22,6 @@ const StyledButtonGroup = styled.div`
 const RadioButtonLabel = styled.label<{
   checked: boolean;
 }>`
-  ${SharedTypographyStyles}
   display: inline-flex;
   width: 97px;
   height: 97px;
@@ -44,6 +44,7 @@ const RadioButtonLabel = styled.label<{
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
+  font-size: 1.15rem;
   &:hover {
     cursor: pointer;
   }

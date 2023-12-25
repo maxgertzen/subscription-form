@@ -1,12 +1,11 @@
 import React from 'react';
 
 import { Spin } from 'antd';
-
 import styled from 'styled-components';
 
 const LoaderWrapper = styled.div`
   height: inherit;
-  width: inherit;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

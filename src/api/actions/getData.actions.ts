@@ -1,12 +1,15 @@
 import React from 'react';
+
 import {
   InitialValuesResponse,
   ProductVariationsResponse,
+  StepOneValues,
 } from '../../interfaces';
+import { convertToDate } from '../../utils/dateFormatter';
 import useApiCallback from '../hooks/useApiCallback';
 
 const useUserInitialValues = () => {
-  const [result, setResult] = React.useState<InitialValuesResponse>();
+  const [result, setResult] = React.useState<StepOneValues>();
   const fetchData = useApiCallback<InitialValuesResponse>({
     url: 'form-data',
     type: 'GET',
@@ -15,15 +18,17 @@ const useUserInitialValues = () => {
   });
 
   React.useEffect(() => {
-    (async () => {
+    const asyncCallback = async () => {
       if (!result) {
         const data = await fetchData();
-        setResult(data as InitialValuesResponse);
+        const dateOfBirth = convertToDate(data?.dateOfBirth);
+        setResult({ ...data, dateOfBirth } as StepOneValues);
       }
-    })();
-  }, []);
+    };
+    asyncCallback();
+  }, [fetchData, result]);
 
-  return result as InitialValuesResponse;
+  return result;
 };
 
 const useProductVariationOptions = () => {
@@ -47,4 +52,4 @@ const useProductVariationOptions = () => {
   return result as ProductVariationsResponse;
 };
 
-export { useUserInitialValues, useProductVariationOptions };
+export { useProductVariationOptions,useUserInitialValues };

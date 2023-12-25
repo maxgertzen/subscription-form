@@ -7,12 +7,13 @@ const StyledFormWrapper = styled.div`
   width: 100%;
   max-width: 500px;
   position: relative;
-  height: 675px;
+  height: 720px;
   box-sizing: border-box;
   direction: rtl;
-  background-color: #f5f2ed;
+  background-color: ${({ theme }) => theme.color.light};
   text-align: right;
   border-radius: ${({ theme }) => theme.borderRadius.container};
+  padding-top: 1rem;
 `;
 
 export default StyledFormWrapper;

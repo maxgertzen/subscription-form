@@ -1,17 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
-import { useStateMachine } from 'little-state-machine';
-import * as actions from '../../store/actions';
-import StepOneForm from './StepOneForm/StepOneForm';
-import StepTwoForm from './StepTwoForm/StepTwoForm';
-import Stepper from '../Stepper/Stepper';
-import styled from 'styled-components';
-import { Typography, VerticalSpacing } from '../../theme/styles';
-import { STRINGS } from '../../language';
-import { convertToDate, formatDate } from '../../utils/dateFormatter';
-import Loader from '../Loader/Loader';
-import SuccessMessage from '../SuccessMessage/SuccessMessage';
 import { Alert } from 'antd';
+import { useStateMachine } from 'little-state-machine';
+import styled from 'styled-components';
+
 import {
   useProductVariationOptions,
   useUserInitialValues,
@@ -20,7 +12,14 @@ import {
   useCheckUserEmail,
   usePostFormData,
 } from '../../api/actions/postData.actions';
+import { startSession } from '../../api/services/axiosService';
 import { ProductVariationsRequestBody, StepOneValues } from '../../interfaces';
+import { STRINGS } from '../../language';
+import * as actions from '../../store/actions';
+import { Typography } from '../../theme/styles';
+import { formatDate } from '../../utils/dateFormatter';
+import Loader from '../Loader/Loader';
+import Stepper from '../Stepper/Stepper';
 import WarningAlert from '../WarningAlert/WarningAlert';
 
 const Container = styled.div`
@@ -32,7 +31,7 @@ const Container = styled.div`
 const AlertWrapper = styled.div`
   padding: 0.5rem 0.5rem 0 0.5rem;
   position: absolute;
-  width: calc(100% - 1rem);
+  width: 100%;
 
   .ant-alert {
     width: 100%;
@@ -42,12 +41,18 @@ const AlertWrapper = styled.div`
 const TypographyWrapper = styled.div`
   padding: 0.5rem 2rem;
 `;
-const StyledHeader = styled.h1<{ align?: React.CSSProperties['alignSelf'] }>`
+const StyledHeader = styled.h1<{
+  $align?: React.CSSProperties['alignSelf'];
+  $padded?: boolean;
+}>`
   ${Typography.HeadingOne};
-  align-self: ${({ align }) => align || 'flex-start'};
+  align-self: ${({ $align }) => $align || 'flex-start'};
+  ${({ $align }) =>
+    $align && $align === 'center' ? 'text-align: center;' : ''}
   span {
     color: ${(props) => props.theme.color.main};
   }
+  padding: ${({ $padded = false }) => ($padded ? '3rem' : '0')};
 `;
 
 const StyledParagraph = styled.p`
@@ -55,6 +60,12 @@ const StyledParagraph = styled.p`
   margin-bottom: 0;
   padding-bottom: 0;
 `;
+
+const StepOneForm = React.lazy(() => import('./StepOneForm/StepOneForm'));
+const StepTwoForm = React.lazy(() => import('./StepTwoForm/StepTwoForm'));
+const SuccessMessage = React.lazy(
+  () => import('../SuccessMessage/SuccessMessage')
+);
 
 const Form: React.FC = () => {
   const [currentStep, setCurrentStep] = React.useState<number>(1);
@@ -73,7 +84,7 @@ const Form: React.FC = () => {
 
   const handleStepTwoSubmit = async (body: ProductVariationsRequestBody) => {
     const { formDataStepOne } = formData;
-    await submitFormCallback({
+    return await submitFormCallback({
       ...body,
       ...(formDataStepOne as StepOneValues),
       dateOfBirth: formatDate(formDataStepOne?.dateOfBirth ?? null),
@@ -95,10 +106,18 @@ const Form: React.FC = () => {
   };
 
   React.useEffect(() => {
+    const generateSessionToken = async (): Promise<void> => {
+      if (!localStorage.getItem('token')) {
+        await startSession();
+      }
+    };
+    generateSessionToken();
+  }, []);
+
+  React.useEffect(() => {
     stateActions.updateStore({
       formDataStepOne: {
         ...stepOneInitialValues,
-        dateOfBirth: convertToDate(stepOneInitialValues?.dateOfBirth),
       },
     });
 
@@ -114,59 +133,62 @@ const Form: React.FC = () => {
 
   return (
     <Container>
-      {isWarning && (
-        <WarningAlert
-          code={warningCode}
-          handleAfterClose={handleAlertAfterClose}
-        />
-      )}
-      {isError && (
-        <AlertWrapper>
-          <Alert
-            message={STRINGS.ERROR.TITLE}
-            description={STRINGS.ERROR.SUBTITLE}
-            type='error'
-            closable
-            afterClose={handleAlertAfterClose}
+      <Suspense fallback={<Loader />}>
+        {isWarning && (
+          <WarningAlert
+            code={warningCode}
+            handleAfterClose={handleAlertAfterClose}
           />
-        </AlertWrapper>
-      )}
-      {isLoading && <Loader />}
-      {currentStep === 1 && !isLoading && (
-        <>
-          <TypographyWrapper>
-            <StyledHeader>
-              {STRINGS.STEP_ONE_TITLE.START}
-              <span>{STRINGS.STEP_ONE_TITLE.END}</span>
+        )}
+        {isError && (
+          <AlertWrapper>
+            <Alert
+              message={STRINGS.ERROR.TITLE}
+              description={STRINGS.ERROR.SUBTITLE}
+              type='error'
+              closable
+              afterClose={handleAlertAfterClose}
+            />
+          </AlertWrapper>
+        )}
+        {isLoading && <Loader />}
+        {currentStep === 1 && !isLoading && (
+          <>
+            <TypographyWrapper>
+              <StyledHeader>
+                {STRINGS.STEP_ONE_TITLE.START}
+                <span>{STRINGS.STEP_ONE_TITLE.END}</span>
+              </StyledHeader>
+              <StyledParagraph>
+                {STRINGS.STEP_ONE_SUBTITLE.START}
+                <strong>{STRINGS.STEP_ONE_SUBTITLE.END}</strong>
+              </StyledParagraph>
+            </TypographyWrapper>
+            <StepOneForm
+              initialValues={formData?.formDataStepOne}
+              setStep={handleSetStep(2)}
+              handleUpdate={stateActions.updateStore}
+              handleSubmit={handleStepOneSubmit}
+            />
+          </>
+        )}
+        {currentStep === 2 && !isLoading && (
+          <>
+            <StyledHeader $align='center' $padded>
+              {STRINGS.STEP_TWO_TITLE}
             </StyledHeader>
-            <StyledParagraph>
-              {STRINGS.STEP_ONE_SUBTITLE.START}
-              <strong>{STRINGS.STEP_ONE_SUBTITLE.END}</strong>
-            </StyledParagraph>
-          </TypographyWrapper>
-          <StepOneForm
-            initialValues={formData?.formDataStepOne}
-            setStep={handleSetStep(2)}
-            handleUpdate={stateActions.updateStore}
-            handleSubmit={handleStepOneSubmit}
-          />
-        </>
-      )}
-      {currentStep === 2 && !isLoading && (
-        <>
-          <VerticalSpacing units={3} />
-          <StyledHeader align='center'>{STRINGS.STEP_TWO_TITLE}</StyledHeader>
-          <StepTwoForm
-            handleUpdate={stateActions.updateStore}
-            options={stepTwoInitialValues?.options}
-            userAge={formData?.formDataStepOne?.dateOfBirth}
-            setStep={handleSetStep(3)}
-            handleBack={handleBack}
-            handleSubmit={handleStepTwoSubmit}
-          />
-        </>
-      )}
-      {currentStep === 3 && !isLoading && <SuccessMessage />}
+            <StepTwoForm
+              handleUpdate={stateActions.updateStore}
+              options={stepTwoInitialValues?.options}
+              userAge={formData?.formDataStepOne?.dateOfBirth}
+              setStep={handleSetStep(3)}
+              handleBack={handleBack}
+              handleSubmit={handleStepTwoSubmit}
+            />
+          </>
+        )}
+        {currentStep === 3 && !isLoading && <SuccessMessage />}
+      </Suspense>
       <Stepper current={currentStep - 1} />
     </Container>
   );

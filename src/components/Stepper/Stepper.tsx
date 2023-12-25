@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Steps } from 'antd';
 import styled from 'styled-components';
+
 import { STRINGS } from '../../language';
 
 interface StepperProps {
@@ -11,11 +12,12 @@ interface StepperProps {
 const StyledSteps = styled(Steps)`
   position: absolute;
   width: 100%;
+  height: 100px;
   bottom: 0;
   padding: 1.5rem 0.75rem 0.5rem;
   background-color: ${(props) => props.theme.color.secondary};
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 
   .ant-steps-item-wait {
     .ant-steps-item-icon {
@@ -59,6 +61,7 @@ const Stepper: React.FC<StepperProps> = ({ current }) => {
   return (
     <StyledSteps
       current={current}
+      responsive={false}
       items={[
         {
           title: STRINGS.STEPS.FIRST,

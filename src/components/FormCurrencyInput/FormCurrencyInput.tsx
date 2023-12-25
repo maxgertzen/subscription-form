@@ -1,21 +1,23 @@
 import React from 'react';
+
 import { Controller, useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
-import { StepTwoValues } from '../../interfaces';
 import { NumericFormat } from 'react-number-format';
-import { SharedTypographyStyles } from '../../theme/styles/StyledTypography';
+import styled from 'styled-components';
+
+import { StepTwoValues } from '../../interfaces';
 
 const StyledCurrencyInput = styled.input`
-  ${SharedTypographyStyles}
-  flex: 1;
-  padding: 10px 0;
-  background-color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  text-align: center;
-  &:focus-visible {
-    outline: none;
+  &&[type] {
+    flex: 1;
+    padding: 10px 0;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+    &:focus-visible {
+      outline: none;
+    }
   }
 `;
 
