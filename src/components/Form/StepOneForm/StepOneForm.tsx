@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
-import FormTextInput from '../../FormTextInput/FormTextInput';
-import FormDatePicker from '../../FormDatePicker/FormDatePicker';
-
-import { STRINGS } from '../../../language';
-import FormCheckbox from '../../FormCheckbox/FormCheckbox';
-import { EmailResponse, FormValues, StepOneValues } from '../../../interfaces';
-import StyledForm from '../../../theme/styles/StyledForm';
-import Button from '../../Button/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+
+import { EmailResponse, FormValues, StepOneValues } from '../../../interfaces';
+import { STRINGS } from '../../../language';
+import StyledForm from '../../../theme/styles/StyledForm';
 import { stepOneSchema } from '../../../validations';
+import Button from '../../Button/Button';
+import FormCheckbox from '../../FormCheckbox/FormCheckbox';
+import FormDatePicker from '../../FormDatePicker/FormDatePicker';
+import FormTextInput from '../../FormTextInput/FormTextInput';
 
 interface StepOneFormProps {
   initialValues: Partial<StepOneValues>;

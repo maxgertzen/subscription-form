@@ -1,1 +1,1 @@
-export * from './hooks/useApiCallback';
+export { default as useApiCallback } from './hooks/useApiCallback';

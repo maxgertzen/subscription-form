@@ -1,4 +1,5 @@
-import { string, object } from 'yup';
+import { object,string } from 'yup';
+
 import { STRINGS } from '../language';
 
 export const stepTwoSchema = object()

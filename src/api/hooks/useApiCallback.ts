@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { useCallback } from 'react';
-import axiosInstance from '../services/axiosService';
 import { useStateMachine } from 'little-state-machine';
+
 import * as actions from '../../store/actions';
+import axiosInstance from '../services/axiosService';
 
 type RequestType = 'GET' | 'POST';
 

@@ -1,24 +1,22 @@
-import * as yup from 'yup';
+import { object, string, date, boolean, DateSchema, BooleanSchema } from 'yup';
+
 import { STRINGS } from '../language';
 
-export const stepOneSchema = yup.object({
-  firstName: yup.string().max(50).required(STRINGS.FORM_ERRORS.REQUIRED),
-  lastName: yup.string().max(50).required(STRINGS.FORM_ERRORS.REQUIRED),
-  phoneNumber: yup
-    .string()
+export const stepOneSchema = object({
+  firstName: string().max(50).required(STRINGS.FORM_ERRORS.REQUIRED),
+  lastName: string().max(50).required(STRINGS.FORM_ERRORS.REQUIRED),
+  phoneNumber: string()
     .matches(/^\+?[0-9]{1,12}$/, STRINGS.FORM_ERRORS.INVALID_PHONE)
     .required(STRINGS.FORM_ERRORS.REQUIRED),
-  email: yup
-    .string()
+  email: string()
     .email(STRINGS.FORM_ERRORS.INVALID_EMAIL)
     .required(STRINGS.FORM_ERRORS.REQUIRED),
-  dateOfBirth: yup
-    .date()
+  dateOfBirth: date()
     .max(
       new Date(new Date().setFullYear(new Date().getFullYear() - 10)),
       STRINGS.FORM_ERRORS.INVALID_DATE
     )
     .nullable()
-    .required(STRINGS.FORM_ERRORS.REQUIRED) as yup.DateSchema<Date | null>,
-  checkbox: yup.boolean() as yup.BooleanSchema<boolean>,
+    .required(STRINGS.FORM_ERRORS.REQUIRED) as DateSchema<Date | null>,
+  checkbox: boolean() as BooleanSchema<boolean>,
 });

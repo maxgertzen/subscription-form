@@ -1,4 +1,5 @@
 import { ApplicationStatus, FormValues } from '../interfaces';
+
 import { State } from './store';
 
 function isApplicationStatus(

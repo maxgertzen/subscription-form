@@ -1,8 +1,10 @@
 import React from 'react';
+
 import styled, { useTheme } from 'styled-components';
-import { Typography, VerticalSpacing } from '../../theme/styles';
-import { STRINGS } from '../../language';
+
 import PartyHatIcon from '../../assets/party-hat-icon.svg?react';
+import { STRINGS } from '../../language';
+import { Typography, VerticalSpacing } from '../../theme/styles';
 
 const Container = styled.div`
   display: flex;

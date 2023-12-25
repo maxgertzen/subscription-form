@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Alert } from 'antd';
-
 import styled from 'styled-components';
+
 import { STRINGS } from '../../language';
 import { Typography } from '../../theme/styles';
 
