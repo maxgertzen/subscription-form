@@ -44,6 +44,11 @@ export type SuccessfullResponse = {
   message: string;
 };
 
+export type AjaxResponse = {
+  data: { message: string };
+  success: boolean;
+};
+
 export type EmailResponse = {
   isNew: boolean;
 };
@@ -59,6 +64,8 @@ export type ProductVariationsResponse = {
 };
 
 export type ProductVariationsRequestBody = {
+  _ajax_nonce?: string;
+  action?: string;
   variationId: number;
   price: number;
 };

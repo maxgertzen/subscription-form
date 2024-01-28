@@ -7,11 +7,11 @@ import styled from 'styled-components';
 import {
   useProductVariationOptions,
   useUserInitialValues,
-} from '../../api/actions/getData.actions';
+} from '../../api/actions/get.actions';
 import {
   useCheckUserEmail,
   usePostFormData,
-} from '../../api/actions/postData.actions';
+} from '../../api/actions/post.actions';
 import { startSession } from '../../api/services/axiosService';
 import { ProductVariationsRequestBody, StepOneValues } from '../../interfaces';
 import { STRINGS } from '../../language';
@@ -35,6 +35,10 @@ const AlertWrapper = styled.div`
 
   .ant-alert {
     width: 100%;
+  }
+
+  button[type='button'].ant-alert-close-icon {
+    min-height: 1rem;
   }
 `;
 
@@ -115,11 +119,13 @@ const Form: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    stateActions.updateStore({
-      formDataStepOne: {
-        ...stepOneInitialValues,
-      },
-    });
+    if (stepOneInitialValues) {
+      stateActions.updateStore({
+        formDataStepOne: {
+          ...stepOneInitialValues,
+        },
+      });
+    }
 
     return () => {
       stateActions.updateStore({

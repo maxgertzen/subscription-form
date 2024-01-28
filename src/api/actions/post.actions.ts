@@ -1,7 +1,9 @@
 import { AxiosError, isAxiosError } from 'axios';
 import { useStateMachine } from 'little-state-machine';
 
+import config from '../../config/config';
 import {
+  AjaxResponse,
   EmailResponse,
   ProductVariationsRequestBody,
   SuccessfullResponse,
@@ -14,7 +16,7 @@ import useApiCallback from '../hooks/useApiCallback';
 const useCheckUserEmail = () => {
   const { actions: stateActions, state } = useStateMachine({ ...actions });
   const checkUserEmail = useApiCallback<EmailResponse>({
-    url: 'check-email',
+    url: `${config.apiRoute}/check-email`,
     type: 'POST',
     withError: false,
     withLoading: true,
@@ -46,19 +48,22 @@ const useCheckUserEmail = () => {
 
 const usePostFormData = () => {
   const { actions: stateActions } = useStateMachine({ ...actions });
+
   const postUserData = useApiCallback<
     SuccessfullResponse,
     UserDetailsRequestBody
   >({
-    url: 'user-submit',
+    url: `${config.apiRoute}/user-submit`,
     type: 'POST',
     withLoading: false,
   });
   const postUserSelection = useApiCallback<
-    SuccessfullResponse,
+    AjaxResponse,
     ProductVariationsRequestBody
   >({
-    url: 'set-selection',
+    url:
+      `${window.radicalFormAjaxObj?.ajax_url}?action=handle_set_variation_selection` ??
+      config.ajaxRoute,
     type: 'POST',
     withLoading: false,
   });
@@ -66,6 +71,7 @@ const usePostFormData = () => {
   return async ({
     price,
     variationId,
+    action = 'handle_set_variation_selection',
     ...userData
   }: UserDetailsRequestBody & ProductVariationsRequestBody) => {
     try {
@@ -73,9 +79,11 @@ const usePostFormData = () => {
       const userResponse = await postUserData(userData);
       if (userResponse) {
         const selectionResponse = await postUserSelection({
+          action,
           price,
           variationId,
         });
+        window.dispatchEvent(new CustomEvent('radical-cart-updated'));
         return selectionResponse;
       }
     } catch (error) {

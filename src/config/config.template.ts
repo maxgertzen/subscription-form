@@ -1,9 +1,13 @@
 export interface Config {
   baseURL: string;
+  apiRoute: string;
+  ajaxRoute: string;
 }
 
-const config: Config = {
+const radicalAppConfig: Config = {
   baseURL: 'https://example.com/api',
+  apiRoute: 'api',
+  ajaxRoute: 'ajax',
 };
 
-export default config;
+export default radicalAppConfig;

@@ -20,6 +20,13 @@ const DatePickerWrapper = styled.div`
       border: none;
       box-shadow: none;
     }
+
+    .ant-picker-input {
+      input {
+        font-family: leon;
+        color: var(--wd-form-color);
+      }
+    }
   }
 `;
 

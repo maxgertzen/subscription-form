@@ -18,7 +18,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/main.tsx'),
       name: 'radical_subscription_form',
       formats: ['iife'],
-      fileName: (format) => `index.${format}.js`,
+      fileName: (format) => `radical-form.${format}.js`,
     },
   },
 });

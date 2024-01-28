@@ -4,13 +4,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 import {
+  AjaxResponse,
   FormValues,
   ProductVariationOption,
   ProductVariationsRequestBody,
   ProductVariationsResponse,
   RadioButtonValue,
   StepTwoValues,
-  SuccessfullResponse,
 } from '../../../interfaces';
 import { STRINGS } from '../../../language';
 import StyledForm from '../../../theme/styles/StyledForm';
@@ -27,7 +27,7 @@ interface StepTwoFormProps {
   handleUpdate: (data: Partial<FormValues>) => void;
   handleSubmit: (
     body: ProductVariationsRequestBody
-  ) => Promise<SuccessfullResponse | undefined>;
+  ) => Promise<AjaxResponse | undefined>;
   handleBack: () => void;
 }
 
@@ -68,7 +68,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({
           ? Number(formData.customAmount)
           : selectedVariation.price,
       });
-      if (response?.message) setStep();
+      if (response?.success) setStep();
     }
   };
 

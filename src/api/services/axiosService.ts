@@ -9,10 +9,8 @@ const axiosInstance: AxiosInstance = axios.create({ baseURL: config.baseURL });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    const nonce = document
-      .getElementById('radical-subscription-form')
-      ?.getAttribute('data-nonce');
+    const token = localStorage.getItem('radical-form-token');
+    const nonce = window.radicalFormAjaxObj?.nonce ?? '';
 
     if (config.headers) {
       if (token) {
@@ -33,7 +31,18 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (
+      response.headers['X-WP-Nonce'] &&
+      response.headers['X-WP-Nonce'] !== window.radicalFormAjaxObj?.nonce
+    ) {
+      window.radicalFormAjaxObj = {
+        ajax_url: window.radicalFormAjaxObj?.ajax_url ?? config.ajaxRoute,
+        nonce: response.headers['X-WP-Nonce'],
+      };
+    }
+    return response;
+  },
   async (error) => {
     if (
       error.response &&
@@ -42,7 +51,8 @@ axiosInstance.interceptors.response.use(
     ) {
       await startSession();
       const config = error.config;
-      config.headers['X-Auth-Radical-Form'] = localStorage.getItem('token');
+      config.headers['X-Auth-Radical-Form'] =
+        localStorage.getItem('radical-form-token');
       return axiosInstance.request(config);
     }
   }
@@ -50,9 +60,10 @@ axiosInstance.interceptors.response.use(
 
 export const startSession = async (): Promise<void> => {
   try {
-    const { data } =
-      await axiosInstance.post<StartSessionResponse>('start-session');
-    localStorage.setItem('token', data.token);
+    const { data } = await axiosInstance.post<StartSessionResponse>(
+      `${config.apiRoute}/start-session`
+    );
+    localStorage.setItem('radical-form-token', data.token);
   } catch (error) {
     if (error instanceof Error) {
       const newError = new Error(error.message);

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import config from '../../config/config';
 import {
   InitialValuesResponse,
   ProductVariationsResponse,
@@ -11,7 +12,7 @@ import useApiCallback from '../hooks/useApiCallback';
 const useUserInitialValues = () => {
   const [result, setResult] = React.useState<StepOneValues>();
   const fetchData = useApiCallback<InitialValuesResponse>({
-    url: 'form-data',
+    url: `${config.apiRoute}/form-data`,
     type: 'GET',
     withError: false,
     withLoading: false,
@@ -34,7 +35,7 @@ const useUserInitialValues = () => {
 const useProductVariationOptions = () => {
   const [result, setResult] = React.useState<ProductVariationsResponse>();
   const fetchData = useApiCallback<ProductVariationsResponse>({
-    url: 'product-variations',
+    url: `${config.apiRoute}/product-variations`,
     type: 'GET',
     withError: false,
     withLoading: false,
@@ -52,4 +53,4 @@ const useProductVariationOptions = () => {
   return result as ProductVariationsResponse;
 };
 
-export { useProductVariationOptions,useUserInitialValues };
+export { useProductVariationOptions, useUserInitialValues };

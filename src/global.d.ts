@@ -7,3 +7,12 @@ declare module 'little-state-machine' {
     formData: FormValues;
   }
 }
+
+declare global {
+  interface Window {
+    radicalFormAjaxObj?: {
+      nonce: string;
+      ajax_url: string;
+    };
+  }
+}
